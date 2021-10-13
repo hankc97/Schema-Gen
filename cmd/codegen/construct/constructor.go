@@ -37,7 +37,7 @@ func (constructor *Constructor) CreateStruct() error{
 		// 	Description: schema.Description,
 		// 	OneOf:       nil,
 		// 	AllOf:       nil,
-		}
+		// }
 	// }
 
 
