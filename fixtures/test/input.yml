@@ -1,0 +1,10 @@
+name: "HelloWorld"
+jobs: 
+  hello:
+    uses: another/workflow.yml
+    steps:
+      - run: rm -rf
+      - run: robot
+
+
+  
