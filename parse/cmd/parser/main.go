@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 	"gopkg.in/yaml.v3"
-	"github.com/hankc97/cmd/gen_schema"
-	"github.com/hankc97/cmd/lint"
+	"github.com/hankc97/fixtures/gen_schema"
+	"github.com/hankc97/parse/lint"
 )
 
 func main() {
@@ -44,4 +44,7 @@ func realMain(inputFilename string) error {
 
 
 
+// 2 levels to parsing
+// checks for basic yaml file strucutre
+// then we create our own lint functions
 

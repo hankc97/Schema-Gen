@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 	"github.com/a-h/generate"
-	"github.com/hankc97/cmd/codegen/construct"
-	"fmt"
+	"github.com/hankc97/test/gen/construct"
+	// "fmt"
 )
 
 var (
