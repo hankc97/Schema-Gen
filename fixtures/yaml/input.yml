@@ -1,10 +1,10 @@
 name: "HelloWorld"
 jobs: 
-  hello:
-    uses: another/workflow.yml
-    steps:
-      - run: rm -rf
-      - run: robot
+  steps:
+    - run: rm -rf
+    - uses: another/workflow.yml
+    - timeout-minutes: 10
+    - id: "helloworld"
 
 
   

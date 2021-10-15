@@ -42,6 +42,7 @@ func (g *Generator) CreateTypes() (err error) {
 	for _, schema := range g.schemas {
 		name := g.getSchemaName("", schema)
 		rootType, err := g.processSchema(name, schema)
+		// fmt.Printf("%#v\n", schema)
 		if err != nil {
 			return err
 		}
@@ -145,10 +146,10 @@ func (g *Generator) processSchema(schemaName string, schema *Schema) (typ string
 // name: name of this array, usually the js key
 // schema: items element
 func (g *Generator) processArray(name string, schema *Schema) (typeStr string, err error) {
-	for _, subSchema := range schema.Items {
-		fmt.Printf("%#v", subSchema)
-		subName := g.getSchemaName(name+"Items", subSchema)
-		subTyp, err := g.processSchema(subName, subSchema)
+	if schema.Items != nil {
+		// subType: fallback name in case this array contains inline object without a title
+		subName := g.getSchemaName(name, schema.Items)
+		subTyp, err := g.processSchema(subName, schema.Items)
 		if err != nil {
 			return "", err
 		}
@@ -169,7 +170,6 @@ func (g *Generator) processArray(name string, schema *Schema) (typeStr string, e
 		}
 		return finalType, nil
 	}
-	// subType: fallback name in case this array contains inline object without a title
 	return "[]interface{}", nil
 }
 
@@ -204,6 +204,7 @@ func (g *Generator) processObject(name string, schema *Schema) (typ string, err 
 		if f.Required {
 			strct.GenerateCode = true
 		}
+		// fmt.Printf("%#v\n", prop)
 		strct.Fields[f.Name] = f
 	}
 	// additionalProperties with typed sub-schema
@@ -315,7 +316,7 @@ func (g *Generator) getSchemaName(keyName string, schema *Schema) string {
 		return getGolangName(keyName)
 	}
 	if schema.Parent == nil {
-		return "Root"
+		return "WorkflowRoot"
 	}
 	if schema.JSONKey != "" {
 		return getGolangName(schema.JSONKey)

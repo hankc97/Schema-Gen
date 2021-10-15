@@ -29,7 +29,7 @@ func realMain(inputFilename string) error {
 	defer input.Close()
 
 	sink := &lint.ProblemSink{Filename: inputFilename, Output: os.Stdout}
-	node := new(gen_schema.WorkflowNode)
+	node := new(gen_schema.WorkflowRoot)
 	
 	if err := yaml.NewDecoder(input).Decode(&node); err != nil {
 		return err

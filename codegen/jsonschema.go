@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"net/url"
-	"fmt"
 )
 
 // AdditionalProperties handles additional properties present in the JSON schema.
@@ -62,9 +61,7 @@ type Schema struct {
 
 	// Items represents the types that are permitted in the array.
 	// http://json-schema.org/draft-07/json-schema-validation.html#rfc.section.6.4
-	Items []*Schema
-
-	Enum []interface{}
+	Items *Schema
 
 	// NameCount is the number of times the instance name was encountered across the schema.
 	NameCount int `json:"-" `
@@ -84,7 +81,6 @@ type Schema struct {
 
 // UnmarshalJSON handles unmarshalling AdditionalProperties from JSON.
 func (ap *AdditionalProperties) UnmarshalJSON(data []byte) error {
-
 	var b bool
 	if err := json.Unmarshal(data, &b); err == nil {
 		*ap = (AdditionalProperties)(Schema{AdditionalPropertiesBool: &b})
@@ -106,14 +102,12 @@ func (ap *AdditionalProperties) UnmarshalJSON(data []byte) error {
 		}
 		return nil
 	}
+
 	s := Schema{}
 	err := json.Unmarshal(data, &s)
-
 	if err == nil {
 		*ap = AdditionalProperties(s)
 	}
-	// fmt.Printf("%+v\n", err)
-
 	return err
 }
 
@@ -216,9 +210,7 @@ func ParseWithSchemaKeyRequired(schema string, uri *url.URL, schemaKeyRequired b
 	}
 
 	s.Init()
-	// fmt.Printf("%+v\n", *s.Definitions["defaults"].Properties["run"].Properties["shell"])
 
-	fmt.Println()
 	return s, nil
 }
 
@@ -250,9 +242,9 @@ func (schema *Schema) updatePathElements() {
 		(*Schema)(schema.AdditionalProperties).updatePathElements()
 	}
 
-	for _, subSchema := range schema.Items {
-		subSchema.PathElement = "items"
-		subSchema.updatePathElements()
+	if schema.Items != nil {
+		schema.Items.PathElement = "items"
+		schema.Items.updatePathElements()
 	}
 }
 
@@ -272,10 +264,9 @@ func (schema *Schema) updateParentLinks() {
 		schema.AdditionalProperties.Parent = schema
 		(*Schema)(schema.AdditionalProperties).updateParentLinks()
 	}
-
-	for _, subSchema := range schema.Items {
-		subSchema.Parent = schema
-		subSchema.updateParentLinks()
+	if schema.Items != nil {
+		schema.Items.Parent = schema
+		schema.Items.updateParentLinks()
 	}
 }
 
@@ -301,8 +292,8 @@ func (schema *Schema) ensureSchemaKeyword() error {
 			return err
 		}
 	}
-	for _, subSchema := range schema.Items {
-		if err := check("items", subSchema); err != nil {
+	if schema.Items != nil {
+		if err := check("items", schema.Items); err != nil {
 			return err
 		}
 	}

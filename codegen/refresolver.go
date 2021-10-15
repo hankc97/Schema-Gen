@@ -146,11 +146,10 @@ func (r *RefResolver) updateURIs(schema *Schema, baseURI url.URL, checkCurrentID
 		newBaseURI.Fragment += "/additionalProperties"
 		r.updateURIs((*Schema)(schema.AdditionalProperties), newBaseURI, true, ignoreFragments)
 	}
-
-	for _, subSchema := range schema.Items {
+	if schema.Items != nil {
 		newBaseURI := baseURI
 		newBaseURI.Fragment += "/items"
-		r.updateURIs(subSchema, newBaseURI, true, ignoreFragments)
+		r.updateURIs(schema.Items, newBaseURI, true, ignoreFragments)
 	}
 	return nil
 }
