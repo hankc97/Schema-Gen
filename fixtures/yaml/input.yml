@@ -4,7 +4,6 @@ jobs:
     - run: rm -rf
     - uses: another/workflow.yml
     - timeout-minutes: 10
-    - id: "helloworld"
 
 
   

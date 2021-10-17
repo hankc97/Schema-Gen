@@ -42,8 +42,6 @@ func realMain(inputFilename string) error {
 	return nil
 }
 
-
-
 // 2 levels to parsing
 // checks for basic yaml file strucutre
 // then we create our own lint functions
