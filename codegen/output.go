@@ -91,7 +91,6 @@ func Output(w io.Writer, g *Generator, pkg string) {
 			}
 			fmt.Fprintf(w, "  %s %s `yaml:\"%s%s\"`\n", f.Name , f.Name + "Raw", f.JSONName, omitempty)
 
-
 			emitRawYAMLNodeCode(codeBuf, f.Name, f.Type)
 			emitUnMarshalCode(codeBuf, f.Name)
 		}
