@@ -1,3 +1,5 @@
+Original at https://github.com/a-h/generate
+
 # generate
 
 Generates Go (golang) Structs and Validation code from JSON schema.
