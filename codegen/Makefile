@@ -1,5 +1,5 @@
 PKG := .
-CMD := $(PKG)/cmd/schema-generate
+CMD := $(PKG)/cmd/
 BIN := schema-generate
 
 # Build
@@ -8,7 +8,7 @@ BIN := schema-generate
 
 all: clean $(BIN)
 
-$(BIN): generator.go jsonschema.go cmd/schema-generate/main.go
+$(BIN): generator.go jsonschema.go cmd/main.go
 	@echo "+ Building $@"
 	CGO_ENABLED="0" go build -v -o $@ $(CMD)
 
