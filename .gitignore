@@ -1,2 +1,4 @@
 schema-generate
 parser
+# emacs backups
+*~

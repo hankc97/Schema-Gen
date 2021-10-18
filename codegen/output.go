@@ -44,7 +44,7 @@ func Output(w io.Writer, g *Generator, pkg string) {
 	codeBuf := new(bytes.Buffer)
 	imports := []string{
 		"gopkg.in/yaml.v3",
-	} 
+	}
 
 	// for _, k := range getOrderedStructNames(structs) {
 	// 	s := structs[k]
@@ -89,7 +89,7 @@ func Output(w io.Writer, g *Generator, pkg string) {
 			if f.Description != "" {
 				outputFieldDescriptionComment(f.Description, w)
 			}
-			fmt.Fprintf(w, "  %s %s `yaml:\"%s%s\"`\n", f.Name , f.Name + "Raw", f.JSONName, omitempty)
+			fmt.Fprintf(w, "  %s %s `yaml:\"%s%s\"`\n", f.Name, f.Name+"Raw", f.JSONName, omitempty)
 
 			emitRawYAMLNodeCode(codeBuf, f.Name, f.Type)
 			emitUnMarshalCode(codeBuf, f.Name)
@@ -104,7 +104,7 @@ func Output(w io.Writer, g *Generator, pkg string) {
 
 func emitRawYAMLNodeCode(w io.Writer, fieldName string, fieldType string) {
 	fmt.Fprintf(w, "\n")
-	fmt.Fprintf(w, "type %s struct {\n", fieldName + "Raw")
+	fmt.Fprintf(w, "type %s struct {\n", fieldName+"Raw")
 	fmt.Fprintf(w, "\tRaw *yaml.Node\n")
 	fmt.Fprintf(w, "\tValue %s\n", fieldType)
 	fmt.Fprintln(w, "}")
@@ -112,12 +112,12 @@ func emitRawYAMLNodeCode(w io.Writer, fieldName string, fieldType string) {
 }
 
 func emitUnMarshalCode(w io.Writer, fieldName string) {
-	fmt.Fprintf(w,"\n")
-	fmt.Fprintf(w, "func (node *%s) UnmarshalYAML(value *yaml.Node) error {\n", fieldName + "Raw")
+	fmt.Fprintf(w, "\n")
+	fmt.Fprintf(w, "func (node *%s) UnmarshalYAML(value *yaml.Node) error {\n", fieldName+"Raw")
 	fmt.Fprintf(w, "\tnode.Raw = value\n")
 	fmt.Fprintf(w, "\treturn value.Decode(&node.Value)\n")
 	fmt.Fprintf(w, "}\n")
-	fmt.Fprintf(w,"\n")
+	fmt.Fprintf(w, "\n")
 }
 
 // func emitMarshalCode(w io.Writer, s Struct, imports map[string]bool) {
@@ -153,8 +153,8 @@ func emitUnMarshalCode(w io.Writer, fieldName string) {
 
 // 			fmt.Fprintf(w,
 // 				`    // Marshal the "%[1]s" field
-//     if comma { 
-//         buf.WriteString(",") 
+//     if comma {
+//         buf.WriteString(",")
 //     }
 //     buf.WriteString("\"%[1]s\": ")
 // 	if tmp, err := json.Marshal(strct.%[2]s); err != nil {
