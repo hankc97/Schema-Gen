@@ -96,7 +96,10 @@ func (g *Generator) processReference(schema *Schema) (string, error) {
 // returns the type refered to by schema after resolving all dependencies
 func (g *Generator) processSchema(schemaName string, schema *Schema) (typ string, err error) {
 	if len(schema.Definitions) > 0 {
-		g.processDefinitions(schema)
+		err := g.processDefinitions(schema)
+		if (err != nil) {
+			return "", err
+		}
 	}
 	schema.FixMissingTypeValue()
 	// if we have multiple schema types, the golang type will be interface{}
