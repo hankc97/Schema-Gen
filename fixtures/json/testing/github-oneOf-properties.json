@@ -2,6 +2,23 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "$comment": "https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions",
     "definitions": {
+        "concurrency": {
+            "type": "object",
+            "properties": {
+                "group": {
+                    "$comment": "https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-concurrency-to-cancel-any-in-progress-job-or-run-1",
+                    "description": "When a concurrent job or workflow is queued, if another job or workflow using the same concurrency group in the repository is in progress, the queued job or workflow will be pending. Any previously pending job or workflow in the concurrency group will be canceled.",
+                    "type": "string"
+                },
+                "cancel-in-progress": {
+                    "$comment": "https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-concurrency-to-cancel-any-in-progress-job-or-run-1",
+                    "description": "To cancel any currently running job or workflow in the same concurrency group, specify cancel-in-progress: true.",
+                    "type": "boolean"
+                }
+            },
+            "required": ["group"],
+            "additionalProperties": false
+        }
     },
     "properties": {
         "concurrency": {
