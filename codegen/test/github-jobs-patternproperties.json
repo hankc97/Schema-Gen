@@ -85,8 +85,7 @@
             "minProperties": 1,
 
             "additionalProperties": false
-        },
-
-        "required": []
-    }
+        }
+    },
+    "required": []
 }
