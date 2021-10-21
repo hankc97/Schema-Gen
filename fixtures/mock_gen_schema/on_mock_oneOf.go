@@ -102,10 +102,10 @@ const (
 )
 
 type WorkFlowOnValue struct {
-	CheckRun OnCheckRunNode `yaml:"check_run,omitempty""`
-	// CheckSuite OnCheckSuiteNode `yaml:"check_suite"`
-	// Create OnCheckNode `yaml:"create"`
-	// Delete OnDeleteNode `yaml:"delete"`
+	CheckRun OnCheckRunNode `yaml:"check_run,omitempty"`
+	// CheckSuite OnCheckSuiteNode `yaml:"check_suite"` -> same as Checkrun
+	Create OnCreateNode `yaml:"create,omitempty"`
+	// Delete OnDeleteNode `yaml:"delete"` -> same as Create
 }
 
 type OnCheckRunNode struct {
@@ -118,12 +118,65 @@ type OnCheckRunOneOf struct {
 	mappingNode *[]OnCheckRunValue
 }
 
+func (node *OnCheckRunNode) UnmarshalYAML(value *yaml.Node) error {
+	node.Raw = value
+
+	if err := OnCheckRunYAMLAssertType(node.Raw); err != nil {
+		return err
+	}
+
+	switch node.Raw.Kind {
+		case yaml.MappingNode:
+			return value.Decode(&node.OneOf.mappingNode)
+		default:
+			return fmt.Errorf("%d:%d	error	Expected one of: string, array, map type", node.Raw.Line, node.Raw.Column)
+	}
+}
+
+func OnCheckRunYAMLAssertType(rawNode *yaml.Node) error {
+	kinds := []yaml.Kind{yaml.MappingNode}
+	containsFlag := false
+	for _, kind := range kinds {
+		if rawNode.Kind == kind {
+			containsFlag = true
+		}
+	}
+	if !containsFlag {
+		return fmt.Errorf("%d:%d	error	Expected one of: string, array, map type", rawNode.Line, rawNode.Column)
+	}
+
+	return nil
+}
+
 type OnCheckRunValue struct {
-	Types CheckRunTypesNode `yaml:"check_run"`
+	Types CheckRunTypesNode `yaml:"types"`
 }
 
 type CheckRunTypesNode struct {
-	
+	Raw *yaml.Node
+	Value *[]CheckRunTypesConstants
+}
+
+type CheckRunTypesConstants string
+
+const (
+	Created CheckRunTypesConstants = "create"
+	Rerequested CheckRunTypesConstants = "rerequested"
+	Completed CheckRunTypesConstants = "completed"
+	RerequestedAction CheckRunTypesConstants = "rerequested_action"
+)
+
+type OnCreateNode struct {
+	Raw *yaml.Node
+	Value CreateEventObjectOneOf 
+}
+
+type CreateEventObjectOneOf struct {
+	mappingNode *[]CreateEventObjectValue //if properties or items key do not exist within Create parent field remove this?
+}
+
+type CreateEventObjectValue struct {
+
 }
 
 
