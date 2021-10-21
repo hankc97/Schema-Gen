@@ -37,12 +37,10 @@ func (g *Generator) CreateTypes() (err error) {
 	}
 
 	fmt.Println("---------------------CreateTypes")
-	// fmt.Printf("%#v\n", *&g.schemas[0].Definitions["shell"].AnyOf[1].Enum[0])
 	// extract the types
 	for _, schema := range g.schemas {
 		name := g.getSchemaName("", schema)
 		rootType, err := g.processSchema(name, schema)
-		// fmt.Printf("%#v\n", schema)
 		if err != nil {
 			return err
 		}
@@ -64,7 +62,7 @@ func (g *Generator) CreateTypes() (err error) {
 // process a block of definitions
 func (g *Generator) processDefinitions(schema *Schema) error {
 	for key, subSchema := range schema.Definitions {
-		if _, err := g.processSchema(getGolangName(key), subSchema); err != nil {
+		if _, err := g.processSchema("Definitions" + getGolangName(key), subSchema); err != nil {
 			return err
 		}
 	}
@@ -190,7 +188,7 @@ func (g *Generator) processObject(name string, schema *Schema) (typ string, err 
 	schema.GeneratedType = "*" + name
 	// regular properties
 	for propKey, prop := range schema.Properties {
-		fieldName := g.getSchemaName("", schema) + getGolangName(propKey)
+		fieldName := name + getGolangName(propKey)
 		// calculate sub-schema name here, may not actually be used depending on type of schema!
 		subSchemaName := g.getSchemaName(fieldName, prop)
 		fieldType, err := g.processSchema(subSchemaName, prop)
@@ -313,22 +311,22 @@ func getPrimitiveTypeName(schemaType string, subType string, pointer bool) (name
 // return a name for this (sub-)schema.
 func (g *Generator) getSchemaName(keyName string, schema *Schema) string {
 	if len(schema.Title) > 0 {
-		return g.getSchemaName("", schema.Parent) + getGolangName(schema.Title)
+		return getGolangName(schema.Title)
 	}
 	if keyName != "" {
-		return g.getSchemaName("", schema.Parent) + getGolangName(keyName)
+		return getGolangName(keyName)
 	}
 	if schema.Parent == nil {
-		return "WorkflowRoot"
+		return "Properties"
 	}
 	if schema.JSONKey != "" {
-		return g.getSchemaName("", schema.Parent) + getGolangName(schema.JSONKey)
+		return getGolangName(schema.JSONKey)
 	}
 	if schema.Parent != nil && schema.Parent.JSONKey != "" {
-		return g.getSchemaName("", schema.Parent) + getGolangName(schema.Parent.JSONKey + "Item")
+		return getGolangName(schema.Parent.JSONKey + "Item")
 	}
 	g.anonCount++
-	return g.getSchemaName("", schema.Parent) + fmt.Sprintf("Anonymous%d", g.anonCount)
+	return fmt.Sprintf("Anonymous%d", g.anonCount)
 }
 
 // getGolangName strips invalid characters out of golang struct or field names.

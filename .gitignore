@@ -1,4 +1,5 @@
 schema-generate
 parser
+asdf.go
 # emacs backups
 *~
