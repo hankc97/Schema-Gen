@@ -211,7 +211,7 @@ func (g *Generator) processObject(name string, schema *Schema) (typ string, err 
 		strct.Fields[f.Name] = f
 	}
 
-	// same loop but for pattern properties
+	// same loop but for pattern properties 
 	for propKey, prop := range schema.PatternProperties {
 		// changed here
 		fieldName := name + getGolangName(propKey)
