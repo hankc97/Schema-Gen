@@ -210,6 +210,31 @@ func (g *Generator) processObject(name string, schema *Schema) (typ string, err 
 		// fmt.Printf("%#v\n", prop)
 		strct.Fields[f.Name] = f
 	}
+
+	// same loop but for pattern properties
+	for propKey, prop := range schema.PatternProperties {
+		// changed here
+		fieldName := name + getGolangName(propKey)
+		// calculate sub-schema name here, may not actually be used depending on type of schema!
+		subSchemaName := g.getSchemaName(fieldName, prop)
+		fieldType, err := g.processSchema(subSchemaName, prop)
+		if err != nil {
+			return "", err
+		}
+		f := Field{
+			Name:        fieldName,
+			JSONName:    propKey,
+			Type:        fieldType,
+			Required:    contains(schema.Required, propKey),
+			Description: prop.Description,
+		}
+		if f.Required {
+			strct.GenerateCode = true
+		}
+		// fmt.Printf("%#v\n", prop)
+		strct.Fields[f.Name] = f
+	}
+	
 	// additionalProperties with typed sub-schema
 	if schema.AdditionalProperties != nil && schema.AdditionalProperties.AdditionalPropertiesBool == nil {
 		ap := (*Schema)(schema.AdditionalProperties)

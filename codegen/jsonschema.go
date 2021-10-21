@@ -37,6 +37,8 @@ type Schema struct {
 	Properties map[string]*Schema
 	Required   []string
 
+	PatternProperties map[string]*Schema
+
 	// "additionalProperties": {...}
 	AdditionalProperties *AdditionalProperties
 
