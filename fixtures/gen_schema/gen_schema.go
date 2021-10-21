@@ -56,9 +56,8 @@ type WorkflowRoot struct {
 
   // The name of your workflow. GitHub displays the names of your workflows on your repository's actions page. If you omit this field, GitHub sets the name to the workflow's filename.
   Name NameRaw `yaml:"name,omitempty"`
+
 }
-
-
 
 type StepsRaw struct {
 	Raw *yaml.Node
@@ -154,4 +153,5 @@ func (node *NameRaw) UnmarshalYAML(value *yaml.Node) error {
 	node.Raw = value
 	return value.Decode(&node.Value)
 }
+
 

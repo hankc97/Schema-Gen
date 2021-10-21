@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 	"gopkg.in/yaml.v3"
-	"github.com/hankc97/fixtures/gen_schema"
+	"github.com/hankc97/fixtures/mock_gen_schema"
 	"github.com/hankc97/parse/lint"
 )
 
@@ -29,7 +29,7 @@ func realMain(inputFilename string) error {
 	defer input.Close()
 
 	sink := &lint.ProblemSink{Filename: inputFilename, Output: os.Stdout}
-	node := new(gen_schema.WorkflowRoot)
+	node := new(mock_gen_schema.WorkflowNode)
 	
 	if err := yaml.NewDecoder(input).Decode(&node); err != nil {
 		return err
@@ -42,7 +42,4 @@ func realMain(inputFilename string) error {
 	return nil
 }
 
-// 2 levels to parsing
-// checks for basic yaml file strucutre
-// then we create our own lint functions
 
