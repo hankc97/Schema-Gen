@@ -1,5 +1,13 @@
 name: "Hank"
-on: hank 
+
+
+on: 
+  checkrun
+
+on:
+  checkrun:
+    type: [com, rereq]
+
 
 
 

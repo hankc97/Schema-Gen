@@ -52,9 +52,9 @@ type WorkflowOnNode struct {
 
 // compare ref if visited dont create append, just reuse name 
 type WorkflowOnOneOf struct {
-	ScalarNode *OnEventConstants
-	SequenceNode *[]OnEventConstants
-	MappingNode *[]WorkFlowOnValue
+	scalarNode *OnEventConstants
+	sequenceNode *[]OnEventConstants
+	mappingNode *[]WorkFlowOnValue
 }
 
 func (node *WorkflowOnNode) UnmarshalYAML(value *yaml.Node) error {
@@ -66,16 +66,14 @@ func (node *WorkflowOnNode) UnmarshalYAML(value *yaml.Node) error {
 
 	switch node.Raw.Kind {
 		case yaml.ScalarNode:
-			return value.Decode(&node.OneOf.ScalarNode)
+			return value.Decode(&node.OneOf.scalarNode)
 		case yaml.SequenceNode:
-			return value.Decode(&node.OneOf.SequenceNode)
+			return value.Decode(&node.OneOf.sequenceNode)
 		case yaml.MappingNode:
-			return value.Decode(&node.OneOf.MappingNode)
+			return value.Decode(&node.OneOf.mappingNode)
 		default:
 			return fmt.Errorf("%d:%d	error	Expected one of: string, array, map type", node.Raw.Line, node.Raw.Column)
 	}
-
-	return nil
 }
 
 func WorkflowOnYAMLAssertType(rawNode *yaml.Node) error {
@@ -104,15 +102,29 @@ const (
 )
 
 type WorkFlowOnValue struct {
-	CheckRun OnCheckRunNode `yaml:"check_run"`
-	CheckSuite OnCheckSuiteNode `yaml:"check_suite"`
-	Create OnCheckNode `yaml:"create"`
-	Delete OnDeleteNode `yaml:"delete"`
+	CheckRun OnCheckRunNode `yaml:"check_run,omitempty""`
+	// CheckSuite OnCheckSuiteNode `yaml:"check_suite"`
+	// Create OnCheckNode `yaml:"create"`
+	// Delete OnDeleteNode `yaml:"delete"`
 }
 
+type OnCheckRunNode struct {
+	Raw *yaml.Node
+	OneOf OnCheckRunOneOf 
+}
 
+type OnCheckRunOneOf struct {
+	// scalarNode *CheckEventObjectNull --> omitempty gives output: Checkrun: 
+	mappingNode *[]OnCheckRunValue
+}
 
+type OnCheckRunValue struct {
+	Types CheckRunTypesNode `yaml:"check_run"`
+}
 
+type CheckRunTypesNode struct {
+	
+}
 
 
 
