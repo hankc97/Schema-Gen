@@ -62,6 +62,7 @@ func (g *Generator) CreateTypes() (err error) {
 // process a block of definitions
 func (g *Generator) processDefinitions(schema *Schema) error {
 	for key, subSchema := range schema.Definitions {
+		// change here
 		if _, err := g.processSchema("Definitions" + getGolangName(key), subSchema); err != nil {
 			return err
 		}
@@ -188,6 +189,7 @@ func (g *Generator) processObject(name string, schema *Schema) (typ string, err 
 	schema.GeneratedType = "*" + name
 	// regular properties
 	for propKey, prop := range schema.Properties {
+		// changed here
 		fieldName := name + getGolangName(propKey)
 		// calculate sub-schema name here, may not actually be used depending on type of schema!
 		subSchemaName := g.getSchemaName(fieldName, prop)
@@ -317,6 +319,7 @@ func (g *Generator) getSchemaName(keyName string, schema *Schema) string {
 		return getGolangName(keyName)
 	}
 	if schema.Parent == nil {
+		// change here
 		return "Properties"
 	}
 	if schema.JSONKey != "" {
